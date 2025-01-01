@@ -1,6 +1,11 @@
+import { useColorMode } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
-export default function Due() {
+export default function Home() {
+  const { colorMode } = useColorMode();
   return (
-    <h1>hello from Due</h1>
-  )
+    <Box bg={colorMode === "dark" ? "#151b23" : "white"} width={"100%"} p={3}>
+      <h1>hello from Due</h1>
+    </Box>
+  );
 }
