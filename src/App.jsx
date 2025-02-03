@@ -1,35 +1,34 @@
-import Sidebar from "./components/sidebar.jsx";
+import { useState, useEffect } from "react";
+import Login from "./components/Login";
+import TaskManager from "./TaskManager";
 import { ChakraProvider } from "@chakra-ui/react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./components/Home.jsx";
-import Due from "./components/Due.jsx";
-import Header from "./components/header.jsx";
-import { Box } from "@chakra-ui/react";
-import ErrorBoundary from "./components/ErrorBounty.jsx";
 import theme from "./theme.jsx";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-function App() {
+const App = () => {
+  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  useEffect(() => {
+    if (!token) localStorage.removeItem("token");
+  }, [token]);
+
   return (
-    // Router needs to wrap everything that uses routing functionality
-    <Router>
-      <ErrorBoundary>
-        <ChakraProvider theme={theme}>
-          <Box display="flex" flexDirection={"column"}>
-            <Header />
-            <Box display={"flex"} flexDirection={"row"}>
-              {/* Sidebar is rendered once, outside of Routes */}
-              <Sidebar />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/due" element={<Due />} />
-              </Routes>
-            </Box>
-          </Box>
-        </ChakraProvider>
-      </ErrorBoundary>
-    </Router>
+    <ChakraProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/login"
+            element={token ? <Navigate to="/Dashboard" /> : <Login />}
+          />
+          <Route
+            path="/Dashboard"
+            element={token ? <TaskManager /> : <Navigate to="/login" />}
+          />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </BrowserRouter>
+    </ChakraProvider>
   );
-}
+};
 
 export default App;

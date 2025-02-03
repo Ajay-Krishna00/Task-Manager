@@ -27,7 +27,7 @@ import { MdOutlineRemoveDone } from "react-icons/md";
 import { useState, useEffect } from "react";
 import EditTaskModal from "./EditTaskModal";
 
-export default function OverDue() {
+export default function Today() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentTask, setCurrentTask] = useState(null);
@@ -42,25 +42,16 @@ export default function OverDue() {
 
   const fetchData = async () => {
     {
-      try {
-        const res = await fetch("http://localhost:5000/tasks");
-        if (!res.ok) {
-          throw new Error("Failed to fetch data from the server");
-        }
-        const data = await res.json();
-        const overdue = data.filter((task) => {
-          const today = new Date();
-          const dueDate = new Date(task.dueDate);
-          today.setHours(0, 0, 0, 0);
-          dueDate.setHours(0, 0, 0, 0);
-          return dueDate < today && task.isCompleted === false;
-        });
-        setTasks(overdue);
-      } catch (e) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
-      }
+      const res = await fetch("http://localhost:5000/tasks");
+      const data = await res.json();
+      const todayTasks = data.filter((task) => {
+        const today = new Date();
+        const dueDate = new Date(task.dueDate);
+        today.setHours(0, 0, 0, 0);
+        dueDate.setHours(0, 0, 0, 0);
+        return dueDate.getTime() === today.getTime(); //getTime() returns the number of milliseconds since the Unix epoch January 1, 1970, which can be compared directly.
+      });
+      setTasks(todayTasks);
     }
   };
   const addTask = async (newTask) => {
@@ -152,14 +143,14 @@ export default function OverDue() {
           throw new Error("Failed to fetch data from the server");
         }
         const data = await res.json();
-        const overdue = data.filter((task) => {
+        const todayTasks = data.filter((task) => {
           const today = new Date();
           const dueDate = new Date(task.dueDate);
           today.setHours(0, 0, 0, 0);
           dueDate.setHours(0, 0, 0, 0);
-          return dueDate < today && task.isCompleted === false;
+          return dueDate.getTime() === today.getTime();
         });
-        setTasks(overdue);
+        setTasks(todayTasks);
       } catch (e) {
         setError(e.message);
       } finally {
@@ -168,6 +159,7 @@ export default function OverDue() {
     }
     fetchData();
   }, []);
+
   const badgeColor = (priority) => {
     switch (priority) {
       case "Urgent":
@@ -219,7 +211,7 @@ export default function OverDue() {
           h={"60vh"}
         >
           <StyledText textAlign={"center"} fontSize={"20px"} mt={"20px"}>
-            No tasks OverDue
+            No tasks due today
           </StyledText>
         </Flex>
       )}

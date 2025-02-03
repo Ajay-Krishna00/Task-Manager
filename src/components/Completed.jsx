@@ -27,7 +27,7 @@ import { MdOutlineRemoveDone } from "react-icons/md";
 import { useState, useEffect } from "react";
 import EditTaskModal from "./EditTaskModal";
 
-export default function OverDue() {
+export default function CompletedTasks() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentTask, setCurrentTask] = useState(null);
@@ -42,20 +42,14 @@ export default function OverDue() {
 
   const fetchData = async () => {
     {
+      setLoading(true);
       try {
         const res = await fetch("http://localhost:5000/tasks");
         if (!res.ok) {
           throw new Error("Failed to fetch data from the server");
         }
         const data = await res.json();
-        const overdue = data.filter((task) => {
-          const today = new Date();
-          const dueDate = new Date(task.dueDate);
-          today.setHours(0, 0, 0, 0);
-          dueDate.setHours(0, 0, 0, 0);
-          return dueDate < today && task.isCompleted === false;
-        });
-        setTasks(overdue);
+        setTasks(data.filter((task) => task.isCompleted === true));
       } catch (e) {
         setError(e.message);
       } finally {
@@ -152,14 +146,7 @@ export default function OverDue() {
           throw new Error("Failed to fetch data from the server");
         }
         const data = await res.json();
-        const overdue = data.filter((task) => {
-          const today = new Date();
-          const dueDate = new Date(task.dueDate);
-          today.setHours(0, 0, 0, 0);
-          dueDate.setHours(0, 0, 0, 0);
-          return dueDate < today && task.isCompleted === false;
-        });
-        setTasks(overdue);
+        setTasks(data.filter((task) => task.isCompleted === true));
       } catch (e) {
         setError(e.message);
       } finally {
@@ -210,18 +197,6 @@ export default function OverDue() {
             }}
           />
         </Alert>
-      )}
-      {tasks.length === 0 && !loading && (
-        <Flex
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          h={"60vh"}
-        >
-          <StyledText textAlign={"center"} fontSize={"20px"} mt={"20px"}>
-            No tasks OverDue
-          </StyledText>
-        </Flex>
       )}
       <Grid
         templateColumns={{

@@ -27,7 +27,7 @@ import { MdOutlineRemoveDone } from "react-icons/md";
 import { useState, useEffect } from "react";
 import EditTaskModal from "./EditTaskModal";
 
-export default function OverDue() {
+export default function Upcoming() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentTask, setCurrentTask] = useState(null);
@@ -53,7 +53,7 @@ export default function OverDue() {
           const dueDate = new Date(task.dueDate);
           today.setHours(0, 0, 0, 0);
           dueDate.setHours(0, 0, 0, 0);
-          return dueDate < today && task.isCompleted === false;
+          return dueDate >= today && task.isCompleted === false;
         });
         setTasks(overdue);
       } catch (e) {
@@ -157,7 +157,7 @@ export default function OverDue() {
           const dueDate = new Date(task.dueDate);
           today.setHours(0, 0, 0, 0);
           dueDate.setHours(0, 0, 0, 0);
-          return dueDate < today && task.isCompleted === false;
+          return dueDate >= today && task.isCompleted === false;
         });
         setTasks(overdue);
       } catch (e) {
@@ -219,7 +219,7 @@ export default function OverDue() {
           h={"60vh"}
         >
           <StyledText textAlign={"center"} fontSize={"20px"} mt={"20px"}>
-            No tasks OverDue
+            No Upcoming tasks
           </StyledText>
         </Flex>
       )}
