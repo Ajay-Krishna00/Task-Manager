@@ -19,6 +19,7 @@ import {
   AlertIcon,
   CloseButton,
   Spinner,
+  useToast,
   Flex,
 } from "@chakra-ui/react";
 import { CiEdit } from "react-icons/ci";
@@ -30,6 +31,8 @@ import TaskModal from "./AddTaskModal";
 import EditTaskModal from "./EditTaskModal";
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { fetchTasks } from "../utils/api";
+import { createTask } from "../utils/api";
 
 export default function AllTasks() {
   const { colorMode } = useColorMode();
@@ -48,23 +51,24 @@ export default function AllTasks() {
   const [currentTask, setCurrentTask] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const toast = useToast();
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:5000/tasks", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Send the JWT in the Authorization header
-          },
-        });
-        if (!res.ok) {
-          throw new Error("An error occurred while fetching the data");
+        const { data } = await fetchTasks();
+        if (data && data.tasks) {
+          setTasks(data.tasks);
+          console.log(data.tasks);
+        } else {
+          throw new Error("Data or tasks are undefined in the response");
         }
-        const data = await res.json();
-        setTasks(data);
       } catch (e) {
-        setError(e.message);
+        if (e == "TypeError: datas is undefined") {
+          setError("");
+        } else {
+          setError(`Failed to fetch data ${e}`);
+        }
       } finally {
         setLoading(false);
       }
@@ -75,19 +79,27 @@ export default function AllTasks() {
   const addTask = async (newTask) => {
     const taskWithId = { ...newTask, id: Date.now() };
     try {
-      const res = await fetch("http://localhost:5000/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(taskWithId),
-      });
-      if (!res.ok) throw new Error("Error adding task");
-      setTasks((prevTasks) => [...prevTasks, taskWithId]); // Update local state
-      fetchData(); // Optionally, fetch data to ensure sync
-    } catch (e) {
-      console.error("Error adding task:", e);
-      setError(e.message);
+      const data = await createTask(taskWithId);
+      if (data.message === "Task created successfully") {
+        toast({
+          title: "Task Added Successfully!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setTasks((prevTasks) => [...prevTasks, taskWithId]); // Update local state
+        fetchData(); // Optionally, fetch data to ensure sync
+      } else {
+        toast({
+          title: "An error occurred.",
+          description: data.error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      alert("Error: " + error.message);
     }
   };
 
@@ -157,14 +169,15 @@ export default function AllTasks() {
   const fetchData = async () => {
     {
       try {
-        const res = await fetch("http://localhost:5000/tasks");
-        if (!res.ok) {
-          throw new Error("An error occurred while fetching the data");
-        }
-        const data = await res.json();
+        const { res } = await fetchTasks();
+        const data = res.tasks;
         setTasks(data);
       } catch (e) {
-        setError(e.message);
+        if (e == "TypeError: res is undefined") {
+          setError("");
+        } else {
+          setError(e.message);
+        }
       } finally {
         setLoading(false);
       }

@@ -39,35 +39,7 @@ export default function TaskModal({ isOpen, onClose, addTask }) {
       priority: "",
     });
     onClose();
-    try {
-      const res = await fetch("http://localhost:5000/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast({
-          title: "Task Added Successfully!",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        addTask(data[0]); // [0] is used to get the first element of the array which is the newly added task
-      } else {
-        toast({
-          title: "An error occurred.",
-          description: data.error,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      alert("Error: " + error.message);
-    }
+    addTask(task);
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -131,7 +103,7 @@ export default function TaskModal({ isOpen, onClose, addTask }) {
 
               <Button
                 type="submit"
-                bg={"blue.400"}
+                bg={"black"}
                 color={"white"}
                 _hover={{ bg: "blue.300" }}
               >

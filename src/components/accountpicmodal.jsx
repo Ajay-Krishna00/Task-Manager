@@ -34,7 +34,7 @@ const images = [
   "https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=600",
 ];
 
-export default function AccountPicModal({ isOpen, onclose }) {
+export default function AccountPicModal({ isOpen, onclose, pic }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -75,6 +75,13 @@ export default function AccountPicModal({ isOpen, onclose }) {
     //   console.error("Error uploading image:", error);
     // }
   };
+
+  const handleUrlImg = (e) => {
+    pic(e.target.src);
+    console.log(e.target.src);
+    onclose();
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onclose} motionPreset="slideInBottom">
       <ModalOverlay />
@@ -107,11 +114,13 @@ export default function AccountPicModal({ isOpen, onclose }) {
                       <Avatar
                         key={i}
                         src={image}
+                        cursor="pointer"
                         size="2xl"
                         pr={"10px"}
                         pb={"10px"}
-                        onClick={() => {}}
+                        onClick={handleUrlImg}
                         _hover={{ cursor: "pointer" }}
+                        _active={{ border: "10px solid " }}
                       />
                     );
                   })}

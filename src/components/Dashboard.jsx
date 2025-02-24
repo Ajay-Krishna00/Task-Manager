@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { StyledText } from "./StyledComponenets";
+import { fetchTasks } from "../utils/api";
 
 const TaskDashboard = () => {
   const { colorMode } = useColorMode();
@@ -43,12 +44,9 @@ const TaskDashboard = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await fetch("http://localhost:5000/tasks");
-        if (!data.ok)
-          throw new Error("An error occurred while fetching the data");
-        // This checks if the response status code is in the range of 200–299, indicating success. If not, an error is thrown.
-        const datas = await data.json();
-
+        const { data } = await fetchTasks();
+        const datas = data.tasks;
+        console.log(datas.tasks);
         setDueData(
           datas.filter((task) => {
             const today = new Date();
@@ -73,7 +71,11 @@ const TaskDashboard = () => {
           }),
         );
       } catch (e) {
-        setError(e.message);
+        if (e == "TypeError: data is undefined") {
+          setError("");
+        } else {
+          setError(`Failed to fetch data ${e}`);
+        }
       } finally {
         setLoading(false);
       }
@@ -214,7 +216,6 @@ const TaskDashboard = () => {
               <Heading size="md" mb={4}>
                 Priority Tasks
               </Heading>
-              {console.log(priorityTasks)}
               <Stack spacing={4}>
                 {priorityTasks.length !== 0 ? (
                   priorityTasks.map((task, i) => (

@@ -4,27 +4,18 @@ import TaskManager from "./TaskManager";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme.jsx";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { isAuthenticated } from "./utils/auth";
 
 const App = () => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-
-  useEffect(() => {
-    if (!token) localStorage.removeItem("token");
-  }, [token]);
-
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Login />} />
           <Route
-            path="/login"
-            element={token ? <Navigate to="/Dashboard" /> : <Login />}
+            path="/*"
+            element={isAuthenticated() ? <TaskManager /> : <Navigate to="/" />}
           />
-          <Route
-            path="/Dashboard"
-            element={token ? <TaskManager /> : <Navigate to="/login" />}
-          />
-          <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

@@ -4,6 +4,9 @@ import {
   Image,
   Button,
   Tooltip,
+  Alert,
+  AlertIcon,
+  CloseButton,
   Avatar,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
@@ -14,38 +17,52 @@ import { FaMoon } from "react-icons/fa";
 import { StyledText } from "./StyledComponenets";
 import { useNavigate } from "react-router-dom";
 import { use, useEffect, useState } from "react";
+import { logout } from "../utils/api";
+import { removeAuthToken } from "../utils/auth";
+import { fetchTasks } from "../utils/api";
+import { fetchUser } from "../utils/api";
+import { getAuthToken } from "../utils/auth";
+import { isAuthenticated } from "../utils/auth";
 
 function Header({ onToggle }) {
   const { colorMode, toggleColorMode } = useColorMode();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const navigate = useNavigate();
+  const token = getAuthToken();
+  const [error, setError] = useState(null);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token from storage
-    navigate("/login"); // Redirect to login page
+  const handleLogout = async () => {
+    const success = await logout();
+    removeAuthToken();
+    if (success) {
+      console.log("Logged out successfully");
+    }
+    navigate("/");
   };
 
   useEffect(() => {
-    async function checkToken() {
-      if (!localStorage.getItem("token")) {
-        navigate("/login");
+    const loadTasks = async () => {
+      try {
+        const { userInfos, error } = await fetchUser();
+        setData(userInfos.user);
+        if (error) {
+          if (error == "Token expired, please log in again") {
+            const success = await logout();
+            removeAuthToken();
+            setError("Session timed out. Please Log In again");
+            if (success) {
+              console.log("Logged out successfully");
+            }
+            navigate("/");
+          }
+          console.log(`Failed to fetch user ${error}`);
+        }
+      } catch (error) {
+        console.log(`Failed to fetch tasks`);
       }
-      const res = await fetch("http://localhost:5000/users", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      const data = await res.json();
-      setData(data);
-      if (data.error) {
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    }
-    checkToken();
-  }, []);
+    };
+    loadTasks();
+  }, [token]);
 
   return (
     <Box
@@ -98,7 +115,7 @@ function Header({ onToggle }) {
               bg: colorMode === "dark" ? "gray.800" : "white",
             }}
           >
-            {colorMode === "light" ? <FaMoon /> : <FiSun fontSize={"20px"} />}
+            {colorMode === "light" ? <FiSun fontSize={"20px"} /> : <FaMoon />}
           </IconButton>
           <Avatar
             src="https://bit.ly/naruto-sage"
@@ -127,6 +144,21 @@ function Header({ onToggle }) {
           </Button>
         </Box>
       </Box>
+      {error && (
+        <Alert status="error" mb={4}>
+          <AlertIcon />
+          {error}
+          <CloseButton
+            alignSelf="flex-start"
+            position="relative"
+            right={-1}
+            top={-1}
+            onClick={() => {
+              setError("");
+            }}
+          />
+        </Alert>
+      )}
     </Box>
   );
 }

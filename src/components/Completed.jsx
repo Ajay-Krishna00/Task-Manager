@@ -26,6 +26,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { MdOutlineRemoveDone } from "react-icons/md";
 import { useState, useEffect } from "react";
 import EditTaskModal from "./EditTaskModal";
+import { fetchTasks } from "../utils/api";
 
 export default function CompletedTasks() {
   const [tasks, setTasks] = useState([]);
@@ -141,14 +142,15 @@ export default function CompletedTasks() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch("http://localhost:5000/tasks");
-        if (!res.ok) {
-          throw new Error("Failed to fetch data from the server");
-        }
-        const data = await res.json();
+        const { res } = await fetchTasks();
+        const data = res.tasks;
         setTasks(data.filter((task) => task.isCompleted === true));
       } catch (e) {
-        setError(e.message);
+        if (e == "TypeError: res is undefined") {
+          setError("");
+        } else {
+          setError(e.message);
+        }
       } finally {
         setLoading(false);
       }

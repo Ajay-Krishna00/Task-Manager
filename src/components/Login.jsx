@@ -24,8 +24,9 @@ import { MdOutlineEmail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
 import AccountPicModal from "./accountpicmodal";
 import { useNavigate } from "react-router-dom";
-
-import axios from "axios";
+import { login } from "../utils/api";
+import { setAuthToken } from "../utils/auth";
+import { signUp } from "../utils/api";
 
 export default function Login() {
   const [log, setLog] = useState("");
@@ -37,46 +38,41 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [token, setToken] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", {
-        email,
-        password,
-      });
-      setToken(res.data.token);
-      localStorage.setItem("token", res.data.token);
-      setError("");
-      // navigate(`/${res.data.users.id}/Dashboard`);
-      console.log(res.data.users.id);
-    } catch (err) {
-      setError(err.response?.data?.error || "Invalid email or password");
+      const { token, user } = await login(email, password);
+      if (error) {
+        if (error.message.includes("Email not confirmed")) {
+          setError(
+            "Email not confirmed. Please check your inbox for a confirmation email.",
+          );
+        } else {
+          setError("Invalid email or password");
+        }
+        return;
+      }
+      setAuthToken(token);
+      navigate("/Dashboard");
+    } catch (error) {
+      setError("Invalid email or password");
     }
   };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setError("Passwords do not match!");
-      return;
-    }
-
     try {
-      const res = await axios.post("http://localhost:5000/auth/signup", {
-        email,
-        password,
-        name,
-        profile_Img,
-      });
-      setSuccess("Account created successfully! Please log in.");
-      setError("");
-    } catch (err) {
-      setError(err.response?.data?.error || "Signup failed");
-      setSuccess("");
+      await signUp(email, password, name, profile_Img);
+      navigate("/"); // Redirect to login page
+    } catch (error) {
+      setError("Failed to sign up");
     }
+  };
+
+  const handleProfileImage = (img) => {
+    setProfile_Img(img);
   };
 
   return (
@@ -152,7 +148,6 @@ export default function Login() {
               _hover={{ bg: "blue.500" }}
               onClick={() => {
                 setLog("login");
-                navigate("/login");
               }}
             >
               Login
@@ -170,7 +165,6 @@ export default function Login() {
               _hover={{ bg: "blue.500" }}
               onClick={() => {
                 setLog("signup");
-                navigate("/signup");
               }}
             >
               Sign Up
@@ -383,7 +377,11 @@ export default function Login() {
           </Card>
         )}
 
-        <AccountPicModal isOpen={isOpen} onclose={onClose} />
+        <AccountPicModal
+          isOpen={isOpen}
+          onclose={onClose}
+          pic={handleProfileImage}
+        />
       </Box>
     </>
   );

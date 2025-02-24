@@ -9,8 +9,9 @@ import CompletedTasks from "./components/Completed.jsx";
 import Upcoming from "./components/Upcoming.jsx";
 import Today from "./components/Today.jsx";
 import { useState } from "react";
+import ProtectedRoute from "./components/protectedRoute.jsx";
 
-function App() {
+function TaskManager() {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -23,12 +24,54 @@ function App() {
         </Box>
         <Box flex={1} overflow={"auto"} p={3}>
           <Routes>
-            <Route path="/Dashboard" element={<Dashboard />} />
-            <Route path="/OverDue" element={<OverDue />} />
-            <Route path="/Upcoming" element={<Upcoming />} />
-            <Route path="/Today" element={<Today />} />
-            <Route path="/allTasks" element={<AllTasks />} />
-            <Route path="/completedTasks" element={<CompletedTasks />} />
+            <Route
+              path="/Dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/OverDue"
+              element={
+                <ProtectedRoute>
+                  <OverDue />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Upcoming"
+              element={
+                <ProtectedRoute>
+                  <Upcoming />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Today"
+              element={
+                <ProtectedRoute>
+                  <Today />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/allTasks"
+              element={
+                <ProtectedRoute>
+                  <AllTasks />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/completedTasks"
+              element={
+                <ProtectedRoute>
+                  <CompletedTasks />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Box>
       </Box>
@@ -36,4 +79,4 @@ function App() {
   );
 }
 
-export default App;
+export default TaskManager;
