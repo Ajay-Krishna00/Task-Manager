@@ -121,7 +121,7 @@ const TaskDashboard = () => {
     return pTask.priority === "Urgent" || pTask.priority === "Important";
   });
   return (
-    <Container maxW="container.xl" py={6}>
+    <Container maxW="container.xl" py={5}>
       {loading ? (
         <Flex
           display={"flex"}
@@ -247,7 +247,7 @@ const TaskDashboard = () => {
                       borderRadius="md"
                     >
                       <Stack display={"flex"} direction={"row"} align="center">
-                        <StyledText fontWeight="medium">
+                        <StyledText fSize={{base:"14px",md:'18px'}} fontWeight="medium">
                           {task.title}
                         </StyledText>
                         <Badge
@@ -264,11 +264,12 @@ const TaskDashboard = () => {
                                       ? "green"
                                       : "gray"
                           }
+                          fontSize={{base:"10px",md:'14px'}}
                         >
                           {task.priority}
                         </Badge>
                       </Stack>
-                      <StyledText fontSize="sm" color="gray.500">
+                      <StyledText fSize={{base:"14px",md:'18px'}} color="gray.500">
                         {task.dueDate}
                       </StyledText>
                     </Flex>

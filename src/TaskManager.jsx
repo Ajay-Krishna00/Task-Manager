@@ -2,18 +2,28 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard.jsx";
 import OverDue from "./components/Due.jsx";
 import Header from "./components/header.jsx";
-import { Box } from "@chakra-ui/react";
+import { Box,useMediaQuery } from "@chakra-ui/react";
 import Sidebar from "./components/sidebar.jsx";
 import AllTasks from "./components/AllTask.jsx";
 import CompletedTasks from "./components/Completed.jsx";
 import Upcoming from "./components/Upcoming.jsx";
 import Today from "./components/Today.jsx";
-import { useState } from "react";
+import { useState,useEffect} from "react";
 import ProtectedRoute from "./components/protectedRoute.jsx";
 
 function TaskManager() {
-  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [isBase] = useMediaQuery("(max-width: 48em)");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  useEffect(() => {
+    if (isBase) {
+      setIsMenuOpen(false);
+    } else {
+      setIsMenuOpen(true);
+    }
+  }
+  ,[isBase]);
 
   return (
     <Box display="flex" flexDirection={"column"}>

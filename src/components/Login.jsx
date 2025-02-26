@@ -18,6 +18,9 @@ import {
   FormErrorMessage,
   useToast,
   Spinner,
+  InputRightElement,
+  IconButton,
+
 } from "@chakra-ui/react";
 import { StyledText } from "./StyledComponenets";
 import { useState } from "react";
@@ -29,6 +32,8 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../utils/api";
 import { setAuthToken } from "../utils/auth";
 import { signUp } from "../utils/api";
+import { FaRegEye } from "react-icons/fa6";
+import { FaRegEyeSlash } from "react-icons/fa6";
 
 export default function Login() {
   const [log, setLog] = useState("");
@@ -44,7 +49,9 @@ export default function Login() {
   const toast = useToast();
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
-
+  const [show, setShow] = useState(false)
+  
+  const handleClick = () => setShow(!show)
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -296,11 +303,16 @@ export default function Login() {
                     <MdPassword />
                   </InputLeftElement>
                   <Input
-                    type="password"
+                    type={show?"text":"password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     isRequired
                   />
+        <InputRightElement width='4.5rem'>
+        <IconButton h='1.75rem' size='sm' onClick={handleClick} bg={"white"}>
+          {show ? <FaRegEye /> : <FaRegEyeSlash />}
+        </IconButton>
+      </InputRightElement>
                 </InputGroup>
               </FormControl>
 
@@ -406,10 +418,15 @@ export default function Login() {
                     <MdPassword />
                   </InputLeftElement>
                   <Input
-                    type="password"
+                    type={show?"text":"password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <InputRightElement width='4.5rem'>
+        <IconButton h='1.75rem' size='sm' onClick={handleClick} bg={"white"}>
+          {show ? <FaRegEye /> : <FaRegEyeSlash />}
+        </IconButton>
+      </InputRightElement>
                 </InputGroup>
               </FormControl>
 

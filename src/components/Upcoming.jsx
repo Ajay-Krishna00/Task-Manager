@@ -392,8 +392,8 @@ export default function Upcoming() {
       <Tooltip label="Add Task" aria-label="A tooltip" placement="bottom">
         <Button
           borderRadius={"50%"}
-          h={"60px"}
-          w={"60px"}
+          h={{md:"60px",base:"50px"}}
+          w={{md:"60px",base:"50px"}}
           position={"fixed"}
           bottom={"60px"}
           right={"60px"}

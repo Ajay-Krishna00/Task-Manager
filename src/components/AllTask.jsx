@@ -278,9 +278,9 @@ export default function AllTasks() {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Title</Th>
-              <Th>Due Date</Th>
-              <Th>Priority</Th>
+              <Th fontSize={{md:"14px",base:"10px"}} p={.5} minW={'90px'}>Title</Th>
+              <Th fontSize={{md:"14px",base:"10px"}}  p={.5}>Due Date</Th>
+              <Th fontSize={{md:"14px",base:"10px"}}  p={.5}>Priority</Th>
               <Th></Th>
               <Th></Th>
               <Th></Th>
@@ -289,7 +289,8 @@ export default function AllTasks() {
           <Tbody>
             {tasks.map((task, i) => (
               <Tr key={i}>
-                <Td maxW={"300px"} flexWrap={"wrap"} wordBreak={"break-word"}>
+                <Td maxW={"300px"} flexWrap={"wrap"} wordBreak={"break-word"}
+                  fontSize={{ md: "17px", base: "14px" }} p={.5}>
                   {task.title}
                   {task.isCompleted && (
                     <Tag
@@ -301,12 +302,12 @@ export default function AllTasks() {
                       ml={2}
                       mt={1}
                     >
-                      <TagLabel>Completed</TagLabel>
+                      <TagLabel fontSize={{md:"14px",base:"10px"}}>Completed</TagLabel>
                     </Tag>
                   )}
                 </Td>
-                <Td>{task.dueDate}</Td>
-                <Td>
+                <Td fontSize={{md:"16px",base:"12px"}} p={.5}>{task.dueDate}</Td>
+                <Td pl={1} pr={.5}>
                   <Badge
                     colorScheme={
                       task.priority === "Urgent"
@@ -321,15 +322,17 @@ export default function AllTasks() {
                                 ? "green"
                                 : "gray"
                     }
+                    fontSize={{md:"13px",base:"10px"}} p={.5}
                   >
                     {task.priority}
                   </Badge>
                 </Td>
-                <Td>
+                <Td p={.5}>
                   <Tooltip label="Edit">
                     <IconButton
                       icon={<CiEdit />}
-                      fontSize={"21px"}
+                      fontSize={{md:"21px",base:"18px"}}
+                      boxSize={{md:"24px",base:"20px"}}
                       background={colorMode === "light" ? "white" : ""}
                       _hover={{
                         background:
@@ -339,7 +342,7 @@ export default function AllTasks() {
                     />
                   </Tooltip>
                 </Td>
-                <Td>
+                <Td  p={.5}>
                   <Tooltip
                     label={
                       task.isCompleted ? "Undo Completion" : "Mark as Done"
@@ -353,7 +356,8 @@ export default function AllTasks() {
                           <IoCheckmarkDone />
                         )
                       }
-                      fontSize={"21px"}
+                      fontSize={{md:"21px",base:"18px"}}
+                      boxSize={{md:"24px",base:"20px"}}
                       background={colorMode === "light" ? "white" : ""}
                       _hover={{
                         background:
@@ -363,11 +367,12 @@ export default function AllTasks() {
                     />
                   </Tooltip>
                 </Td>
-                <Td>
+                <Td  p={.5}>
                   <Tooltip label="Delete">
                     <IconButton
                       icon={<MdDeleteOutline />}
-                      fontSize={"21px"}
+                      fontSize={{md:"21px",base:"18px"}}
+                      boxSize={{md:"24px",base:"20px"}}
                       background={colorMode === "light" ? "white" : ""}
                       _hover={{
                         background:
@@ -408,14 +413,14 @@ export default function AllTasks() {
       <Tooltip label="Add Task" aria-label="A tooltip" placement="bottom">
         <Button
           borderRadius={"50%"}
-          h={"60px"}
-          w={"60px"}
+          h={{md:"60px",base:"50px"}}
+          w={{md:"60px",base:"50px"}}
           position={"fixed"}
           bottom={"60px"}
           right={"60px"}
           color={"white"}
           bg={"blackAlpha.900"}
-          p={0}
+          p={.5}
           _hover={{ bg: "blue.500" }}
           onClick={AddOnOpen}
         >
