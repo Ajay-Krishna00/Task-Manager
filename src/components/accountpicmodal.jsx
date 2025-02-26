@@ -56,13 +56,14 @@ export default function AccountPicModal({ isOpen, onclose, pic, UPImage }) {
   // Handle image submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-      toast({
-        title: "Under DEVELOPMENT",
-        description: "This feature is under development😁. If you want to contribute to this feature goto https://github.com/Ajay-Krishna00/Task-Manager",
-        status: "info",
-        duration: 10000,
-        isClosable: true,
-    })
+    toast({
+      title: "Under DEVELOPMENT",
+      description:
+        "This feature is under development😁. If you want to contribute to this feature goto https://github.com/Ajay-Krishna00/Task-Manager",
+      status: "info",
+      duration: 10000,
+      isClosable: true,
+    });
     UPImage(image);
     onclose();
   };

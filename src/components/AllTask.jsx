@@ -278,9 +278,15 @@ export default function AllTasks() {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th fontSize={{md:"14px",base:"10px"}} p={.5} minW={'90px'}>Title</Th>
-              <Th fontSize={{md:"14px",base:"10px"}}  p={.5}>Due Date</Th>
-              <Th fontSize={{md:"14px",base:"10px"}}  p={.5}>Priority</Th>
+              <Th fontSize={{ md: "14px", base: "10px" }} p={0.5} minW={"90px"}>
+                Title
+              </Th>
+              <Th fontSize={{ md: "14px", base: "10px" }} p={0.5}>
+                Due Date
+              </Th>
+              <Th fontSize={{ md: "14px", base: "10px" }} p={0.5}>
+                Priority
+              </Th>
               <Th></Th>
               <Th></Th>
               <Th></Th>
@@ -289,8 +295,13 @@ export default function AllTasks() {
           <Tbody>
             {tasks.map((task, i) => (
               <Tr key={i}>
-                <Td maxW={"300px"} flexWrap={"wrap"} wordBreak={"break-word"}
-                  fontSize={{ md: "17px", base: "14px" }} p={.5}>
+                <Td
+                  maxW={"300px"}
+                  flexWrap={"wrap"}
+                  wordBreak={"break-word"}
+                  fontSize={{ md: "17px", base: "14px" }}
+                  p={0.5}
+                >
                   {task.title}
                   {task.isCompleted && (
                     <Tag
@@ -302,12 +313,16 @@ export default function AllTasks() {
                       ml={2}
                       mt={1}
                     >
-                      <TagLabel fontSize={{md:"14px",base:"10px"}}>Completed</TagLabel>
+                      <TagLabel fontSize={{ md: "14px", base: "10px" }}>
+                        Completed
+                      </TagLabel>
                     </Tag>
                   )}
                 </Td>
-                <Td fontSize={{md:"16px",base:"12px"}} p={.5}>{task.dueDate}</Td>
-                <Td pl={1} pr={.5}>
+                <Td fontSize={{ md: "16px", base: "12px" }} p={0.5}>
+                  {task.dueDate}
+                </Td>
+                <Td pl={1} pr={0.5}>
                   <Badge
                     colorScheme={
                       task.priority === "Urgent"
@@ -322,17 +337,18 @@ export default function AllTasks() {
                                 ? "green"
                                 : "gray"
                     }
-                    fontSize={{md:"13px",base:"10px"}} p={.5}
+                    fontSize={{ md: "13px", base: "10px" }}
+                    p={0.5}
                   >
                     {task.priority}
                   </Badge>
                 </Td>
-                <Td p={.5}>
+                <Td p={0.5}>
                   <Tooltip label="Edit">
                     <IconButton
                       icon={<CiEdit />}
-                      fontSize={{md:"21px",base:"18px"}}
-                      boxSize={{md:"24px",base:"20px"}}
+                      fontSize={{ md: "21px", base: "18px" }}
+                      boxSize={{ md: "24px", base: "20px" }}
                       background={colorMode === "light" ? "white" : ""}
                       _hover={{
                         background:
@@ -342,7 +358,7 @@ export default function AllTasks() {
                     />
                   </Tooltip>
                 </Td>
-                <Td  p={.5}>
+                <Td p={0.5}>
                   <Tooltip
                     label={
                       task.isCompleted ? "Undo Completion" : "Mark as Done"
@@ -356,8 +372,8 @@ export default function AllTasks() {
                           <IoCheckmarkDone />
                         )
                       }
-                      fontSize={{md:"21px",base:"18px"}}
-                      boxSize={{md:"24px",base:"20px"}}
+                      fontSize={{ md: "21px", base: "18px" }}
+                      boxSize={{ md: "24px", base: "20px" }}
                       background={colorMode === "light" ? "white" : ""}
                       _hover={{
                         background:
@@ -367,12 +383,12 @@ export default function AllTasks() {
                     />
                   </Tooltip>
                 </Td>
-                <Td  p={.5}>
+                <Td p={0.5}>
                   <Tooltip label="Delete">
                     <IconButton
                       icon={<MdDeleteOutline />}
-                      fontSize={{md:"21px",base:"18px"}}
-                      boxSize={{md:"24px",base:"20px"}}
+                      fontSize={{ md: "21px", base: "18px" }}
+                      boxSize={{ md: "24px", base: "20px" }}
                       background={colorMode === "light" ? "white" : ""}
                       _hover={{
                         background:
@@ -413,14 +429,14 @@ export default function AllTasks() {
       <Tooltip label="Add Task" aria-label="A tooltip" placement="bottom">
         <Button
           borderRadius={"50%"}
-          h={{md:"60px",base:"50px"}}
-          w={{md:"60px",base:"50px"}}
+          h={{ md: "60px", base: "50px" }}
+          w={{ md: "60px", base: "50px" }}
           position={"fixed"}
           bottom={"60px"}
           right={"60px"}
           color={"white"}
           bg={"blackAlpha.900"}
-          p={.5}
+          p={0.5}
           _hover={{ bg: "blue.500" }}
           onClick={AddOnOpen}
         >

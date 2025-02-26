@@ -20,7 +20,6 @@ import {
   Spinner,
   InputRightElement,
   IconButton,
-
 } from "@chakra-ui/react";
 import { StyledText } from "./StyledComponenets";
 import { useState } from "react";
@@ -49,9 +48,9 @@ export default function Login() {
   const toast = useToast();
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
-  const [show, setShow] = useState(false)
-  
-  const handleClick = () => setShow(!show)
+  const [show, setShow] = useState(false);
+
+  const handleClick = () => setShow(!show);
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -99,14 +98,14 @@ export default function Login() {
       // const fileName = name;
       // try {
       //   const { data, error } = await supabase.storage
-      //     .from("Images") 
+      //     .from("Images")
       //     .upload(`profiles/${fileName}`, file, {
       //       contentType: image/png, // Ensures correct MIME type is set
       //     });
       //   const { publicURL, error: urlError } = supabase.storage
       //     .from("Images")
       //     .getPublicUrl(`profiles/${fileName}`);
-        
+
       //   setProfile_Img(publicURL);
       //   if (urlError) {
       //     toast({
@@ -151,8 +150,6 @@ export default function Login() {
       setTimeout(() => {
         setLog("login");
       }, 9000);
-
-      
     } catch (error) {
       setError("Failed to sign up");
     } finally {
@@ -303,16 +300,21 @@ export default function Login() {
                     <MdPassword />
                   </InputLeftElement>
                   <Input
-                    type={show?"text":"password"}
+                    type={show ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     isRequired
                   />
-        <InputRightElement width='4.5rem'>
-        <IconButton h='1.75rem' size='sm' onClick={handleClick} bg={"white"}>
-          {show ? <FaRegEye /> : <FaRegEyeSlash />}
-        </IconButton>
-      </InputRightElement>
+                  <InputRightElement width="4.5rem">
+                    <IconButton
+                      h="1.75rem"
+                      size="sm"
+                      onClick={handleClick}
+                      bg={"white"}
+                    >
+                      {show ? <FaRegEye /> : <FaRegEyeSlash />}
+                    </IconButton>
+                  </InputRightElement>
                 </InputGroup>
               </FormControl>
 
@@ -418,15 +420,20 @@ export default function Login() {
                     <MdPassword />
                   </InputLeftElement>
                   <Input
-                    type={show?"text":"password"}
+                    type={show ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <InputRightElement width='4.5rem'>
-        <IconButton h='1.75rem' size='sm' onClick={handleClick} bg={"white"}>
-          {show ? <FaRegEye /> : <FaRegEyeSlash />}
-        </IconButton>
-      </InputRightElement>
+                  <InputRightElement width="4.5rem">
+                    <IconButton
+                      h="1.75rem"
+                      size="sm"
+                      onClick={handleClick}
+                      bg={"white"}
+                    >
+                      {show ? <FaRegEye /> : <FaRegEyeSlash />}
+                    </IconButton>
+                  </InputRightElement>
                 </InputGroup>
               </FormControl>
 

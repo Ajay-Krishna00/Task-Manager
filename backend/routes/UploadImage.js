@@ -1,24 +1,22 @@
-
 import { supabase } from "../utils/supabaseClient.js";
-
 
 const uploadProfileImage = async (file, name) => {
   const name = req.body.name;
   const fileName = name;
 
   const { data, error } = await supabase.storage
-    .from('Images') 
+    .from("Images")
     .upload(`profiles/${fileName}`, file, {
       contentType: image.png,
     });
 
   if (error) {
     console.error("Error uploading image:", error);
-    return ;
+    return;
   }
 
   const { publicURL, error: urlError } = supabase.storage
-    .from('Images')
+    .from("Images")
     .getPublicUrl(`profiles/${fileName}`);
 
   if (urlError) {
@@ -27,9 +25,7 @@ const uploadProfileImage = async (file, name) => {
   }
 
   console.log("Profile image uploaded successfully:", publicURL);
-  return publicURL ;
+  return publicURL;
 };
-  
-
 
 export default uploadProfileImage;

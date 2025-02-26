@@ -2,13 +2,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard.jsx";
 import OverDue from "./components/Due.jsx";
 import Header from "./components/header.jsx";
-import { Box,useMediaQuery } from "@chakra-ui/react";
+import { Box, useMediaQuery } from "@chakra-ui/react";
 import Sidebar from "./components/sidebar.jsx";
 import AllTasks from "./components/AllTask.jsx";
 import CompletedTasks from "./components/Completed.jsx";
 import Upcoming from "./components/Upcoming.jsx";
 import Today from "./components/Today.jsx";
-import { useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import ProtectedRoute from "./components/protectedRoute.jsx";
 
 function TaskManager() {
@@ -22,8 +22,7 @@ function TaskManager() {
     } else {
       setIsMenuOpen(true);
     }
-  }
-  ,[isBase]);
+  }, [isBase]);
 
   return (
     <Box display="flex" flexDirection={"column"}>

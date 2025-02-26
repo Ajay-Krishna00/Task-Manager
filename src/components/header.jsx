@@ -80,7 +80,7 @@ function Header({ onToggle }) {
         as={"nav"}
         h={"70.6px"}
         border={"1px"}
-        p={{md:3,base:1}}
+        p={{ md: 3, base: 1 }}
         display="flex"
         flexDirection={"row"}
         justifyContent="space-between"
@@ -89,14 +89,14 @@ function Header({ onToggle }) {
         width={"100vw"}
         bg={colorMode === "dark" ? "#151b23" : "white"}
       >
-        <div style={{ marginLeft: {md:"10px",base:"0px"} }}>
+        <div style={{ marginLeft: { md: "10px", base: "0px" } }}>
           <Tooltip label="Menu" aria-label="menu">
             <IconButton
               onClick={onToggle}
               variant={"ghost"}
               aria-label="menu"
               rounded="full"
-              fontSize={{md:"22px",base:"18px"}}
+              fontSize={{ md: "22px", base: "18px" }}
               bg={colorMode === "dark" ? "#151b23" : "white"}
               _hover={{
                 bg: colorMode === "dark" ? "gray.800" : "white",
@@ -106,10 +106,15 @@ function Header({ onToggle }) {
             </IconButton>
           </Tooltip>
         </div>
-        <Box position={"absolute"} left={{md:"45%",base:"10%"}}>
-          <StyledText fSize={{md:"26px",base:"20px"}}>TodoMate</StyledText>
+        <Box position={"absolute"} left={{ md: "45%", base: "10%" }}>
+          <StyledText fSize={{ md: "26px", base: "20px" }}>TodoMate</StyledText>
         </Box>
-        <Box display="flex" flexDirection={"row"} alignItems={"center"} gap={{md:6,base:1}}>
+        <Box
+          display="flex"
+          flexDirection={"row"}
+          alignItems={"center"}
+          gap={{ md: 6, base: 1 }}
+        >
           <IconButton
             variant={"ghost"}
             aria-label="color mode"
@@ -122,24 +127,26 @@ function Header({ onToggle }) {
             fontSize={{ md: "24px", base: "15px" }}
             boxSize={{ md: "24px", base: "23px" }}
           >
-            {colorMode === "light" ? <FiSun  /> : <FaMoon />}
+            {colorMode === "light" ? <FiSun /> : <FaMoon />}
           </IconButton>
           <Avatar
             src={
               data.profile_Img ||
               "https://cdn-icons-png.flaticon.com/512/3276/3276535.png"
             }
-            boxSize={{md:"45px",base:"30px"}}
+            boxSize={{ md: "45px", base: "30px" }}
             borderRadius="full"
             fit="cover"
             alt="Profile Pic"
           />
-          <StyledText fSize={{md:"18px",base:"12px"}}>{data.name}</StyledText>
+          <StyledText fSize={{ md: "18px", base: "12px" }}>
+            {data.name}
+          </StyledText>
           <Button
             variant="outline"
             color="red.500"
             border="2px solid red"
-            mr={{md:2,base:0}}
+            mr={{ md: 2, base: 0 }}
             _hover={{
               bg: "red.500",
               color: "white",
@@ -148,10 +155,10 @@ function Header({ onToggle }) {
               bg: "red.600",
               transform: "scale(0.98)",
             }}
-            p={{md:"3",base:1}}
+            p={{ md: "3", base: 1 }}
             onClick={handleLogout}
           >
-            <Text fontSize={{md:"18px",base:"12px"}}>Logout</Text>
+            <Text fontSize={{ md: "18px", base: "12px" }}>Logout</Text>
           </Button>
         </Box>
       </Box>
