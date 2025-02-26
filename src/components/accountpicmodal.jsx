@@ -13,6 +13,7 @@ import {
   Avatar,
   Box,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { StyledText } from "./StyledComponenets";
 import { useState } from "react";
@@ -34,9 +35,10 @@ const images = [
   "https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=600",
 ];
 
-export default function AccountPicModal({ isOpen, onclose, pic }) {
+export default function AccountPicModal({ isOpen, onclose, pic, UPImage }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const toast = useToast();
 
   // Handle image selection
   const handleImageChange = (e) => {
@@ -54,31 +56,19 @@ export default function AccountPicModal({ isOpen, onclose, pic }) {
   // Handle image submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!image) {
-      alert("Please select an image to upload.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", image);
-
-    // try {
-    //   const response = await fetch('/upload', {
-    //     method: 'POST',
-    //     body: formData,
-    //   });
-
-    //   const data = await response.json();
-    //   console.log("Image uploaded successfully:", data);
-    // } catch (error) {
-    //   console.error("Error uploading image:", error);
-    // }
+      toast({
+        title: "Under DEVELOPMENT",
+        description: "This feature is under development😁. If you want to contribute to this feature goto https://github.com/Ajay-Krishna00/Task-Manager",
+        status: "info",
+        duration: 10000,
+        isClosable: true,
+    })
+    UPImage(image);
+    onclose();
   };
 
   const handleUrlImg = (e) => {
     pic(e.target.src);
-    console.log(e.target.src);
     onclose();
   };
 
@@ -127,7 +117,8 @@ export default function AccountPicModal({ isOpen, onclose, pic }) {
                 </Box>
               </TabPanel>
               <TabPanel>
-                <StyledText mb={"20px"}>Upload a profile picture</StyledText>
+                <StyledText mb={"20px"}>Upload your profile picture</StyledText>
+                <StyledText mb={"20px"}>Accepted file type: PNG</StyledText>
                 <form onSubmit={handleSubmit}>
                   {/* <input  type="file" accept="image/*" onChange={handleImageChange} />
                   {imagePreview && <img src={imagePreview} alt="Preview" style={{ maxWidth: '300px', marginTop: '20px' }} />}

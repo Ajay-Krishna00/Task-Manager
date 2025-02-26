@@ -39,6 +39,7 @@ const TaskDashboard = () => {
   const [allData, setAllData] = useState([]);
   const [comData, setComData] = useState([]);
   const [upData, setUpData] = useState([]);
+  const [chartData, setChartData] = useState([]);
   const bg = colorMode === "light" ? "white" : "black";
 
   useEffect(() => {
@@ -46,7 +47,6 @@ const TaskDashboard = () => {
       try {
         const { data } = await fetchTasks();
         const datas = data.tasks;
-        console.log(datas.tasks);
         setDueData(
           datas.filter((task) => {
             const today = new Date();
@@ -74,31 +74,50 @@ const TaskDashboard = () => {
         if (e == "TypeError: data is undefined") {
           setError("");
         } else {
-          setError(`Failed to fetch data ${e}`);
+          setError(`Failed to fetch data `);
         }
       } finally {
         setLoading(false);
       }
     }
+
     fetchData();
   }, []);
-  const getTasksForDay = (dayOfWeek) => {
-    return comData.filter((task) => {
-      const taskDate = new Date(task.completedDate);
-      const taskDay = taskDate.toLocaleString("en-US", { weekday: "short" }); // Get short day name (Mon, Tue, etc.)
-      return taskDay === dayOfWeek;
-    }).length;
-  };
-  const chartData = [
-    { day: "Mon", completed: getTasksForDay("Mon") },
-    { day: "Tue", completed: getTasksForDay("Tue") },
-    { day: "Wed", completed: getTasksForDay("Wed") },
-    { day: "Thu", completed: getTasksForDay("Thu") },
-    { day: "Fri", completed: getTasksForDay("Fri") },
-    { day: "Sat", completed: getTasksForDay("Sat") },
-    { day: "Sun", completed: getTasksForDay("Sun") },
-  ];
-  const priorityTasks = upData.filter((pTask) => {
+
+  useEffect(() => {
+    const getTasksForDay = (dayOfWeek) => {
+      return comData.filter((task) => {
+        const taskDate = new Date(task.completedDate);
+        const now = new Date();
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+        startOfWeek.setHours(0, 0, 0, 0);
+        if (taskDate >= startOfWeek) {
+          const taskDay = taskDate.toLocaleString("en-US", {
+            weekday: "short",
+          });
+          return taskDay === dayOfWeek;
+        }
+        return false;
+      }).length;
+    };
+
+    if (comData.length > 0) {
+      setChartData([
+        { day: "Mon", completed: getTasksForDay("Mon") },
+        { day: "Tue", completed: getTasksForDay("Tue") },
+        { day: "Wed", completed: getTasksForDay("Wed") },
+        { day: "Thu", completed: getTasksForDay("Thu") },
+        { day: "Fri", completed: getTasksForDay("Fri") },
+        { day: "Sat", completed: getTasksForDay("Sat") },
+        { day: "Sun", completed: getTasksForDay("Sun") },
+      ]);
+    }
+  }, [comData]);
+  const priorityTasks = allData.filter((pTask) => {
+    if (pTask.isCompleted) {
+      return false;
+    }
     return pTask.priority === "Urgent" || pTask.priority === "Important";
   });
   return (

@@ -29,7 +29,7 @@ export const logout = async () => {
   return response.data;
 };
 
-// Fetch all 
+// Fetch all
 export const fetchTasks = async () => {
   const token = localStorage.getItem("token");
   try {
@@ -37,9 +37,8 @@ export const fetchTasks = async () => {
       headers: { Authorization: `Bearer ${token}` }, // Send the token in the header
     });
     // console.log("Tasks fetched successfully:", response.data);
-    return response.data;
+    return { data: response.data };
   } catch (error) {
-    console.log("Error fetching tasks:", error.response?.data || error.message);
     throw error;
   }
 };
@@ -52,11 +51,8 @@ export const fetchUser = async () => {
     });
     return { userInfos: response.data, error: null };
   } catch (error) {
-    console.log("Error fetching user:", error.response?.data || error.message);
-    return {
-      userInfos: { user: " " },
-      error: error.response?.data?.error || error.message,
-    };
+    console.log("Error fetching user:", error.response?.data);
+    return { userInfos: { user: "" }, error: error.response?.data };
   }
 };
 
@@ -76,4 +72,17 @@ export const deleteTask = async (id) => {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
+};
+
+// Update a task
+export const updateTask = async (editTask) => {
+  const token = localStorage.getItem("token");
+  const response = await axios.put(
+    `${API_URL}/tasks/${editTask.id}`,
+    editTask,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+  return { data: response.data };
 };

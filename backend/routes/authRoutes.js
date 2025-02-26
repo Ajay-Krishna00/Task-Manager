@@ -18,17 +18,27 @@ router.post(
     const { email, password, name, profile_Img } = req.body;
 
     try {
-      // Step 1: Sign up the user with Supabase Auth
+      // Sign up the user with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
       });
 
       if (authError) {
+        if (
+          authError.message.includes(
+            "duplicate key value violates unique constraint",
+          ) ||
+          authError.message.includes(
+            "insert or update on table violates foreign key constraint",
+          )
+        ) {
+          return res.status(400).json({ error: "Email already exists" });
+        }
         return res.status(400).json({ error: authError.message });
       }
 
-      // Step 2: Insert additional user data into a custom table (optional)
+      //Insert additional user data into a custom table
       const { data: userData, error: userError } = await supabase
         .from("users") // Custom table for additional user data
         .insert([
@@ -40,10 +50,17 @@ router.post(
         ]);
 
       if (userError) {
+        if (
+          userError.message.includes(
+            "duplicate key value violates unique constraint",
+          )
+        ) {
+          return res.status(400).json({ error: "Email already exists" });
+        }
         return res.status(400).json({ error: userError.message });
       }
 
-      // Step 3: Return success response
+      // Return success response
       res.json({
         message: "User signed up successfully!",
         user: authData.user,

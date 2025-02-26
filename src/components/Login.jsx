@@ -16,6 +16,8 @@ import {
   AlertIcon,
   CloseButton,
   FormErrorMessage,
+  useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { StyledText } from "./StyledComponenets";
 import { useState } from "react";
@@ -38,10 +40,14 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
   const navigate = useNavigate();
+  const [image, setImage] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const { token, user } = await login(email, password);
       if (error) {
@@ -58,16 +64,92 @@ export default function Login() {
       navigate("/Dashboard");
     } catch (error) {
       setError("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleUpLoadImage = (image) => {
+    setImage(image);
   };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    if (password !== confirmPassword) {
+      toast({
+        title: "Password mismatch",
+        description: "Passwords do not match",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
     try {
-      await signUp(email, password, name, profile_Img);
-      navigate("/"); // Redirect to login page
+      // // Upload the image
+      // const formData = new FormData();
+      // formData.append("image", image);
+      // const fileName = name;
+      // try {
+      //   const { data, error } = await supabase.storage
+      //     .from("Images") 
+      //     .upload(`profiles/${fileName}`, file, {
+      //       contentType: image/png, // Ensures correct MIME type is set
+      //     });
+      //   const { publicURL, error: urlError } = supabase.storage
+      //     .from("Images")
+      //     .getPublicUrl(`profiles/${fileName}`);
+        
+      //   setProfile_Img(publicURL);
+      //   if (urlError) {
+      //     toast({
+      //       title: "Image URL failed",
+      //       description: "An error occurred while uploading the image.",
+      //       status: "error",
+      //       duration: 5000,
+      //       isClosable: true,
+      //     });
+      //     return;
+      //   }
+      // } catch (error) {
+      //   console.error("Error uploading the image: ", error);
+      //   toast({
+      //     title: "Image upload failed",
+      //     description: "An error occurred while uploading the image.",
+      //     status: "error",
+      //     duration: 5000,
+      //     isClosable: true,
+      //   });
+      // }
+
+      // Sign up the user
+      const res = await signUp(email, password, name, profile_Img);
+      if (res.error) {
+        toast({
+          title: "Sign up failed",
+          description: res.error,
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+      toast({
+        title: "Sign up successful",
+        position: "top",
+        description: "Please Go to your mail and Confirm your SignUP",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        setLog("login");
+      }, 9000);
+
+      
     } catch (error) {
       setError("Failed to sign up");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -234,6 +316,7 @@ export default function Login() {
                 _hover={{ bg: "blue.500" }}
               >
                 Login
+                {loading && <Spinner size="md" ml="3" />}
               </Button>
               <StyledText fSize="18px" mt="20px">
                 Don't have an account?
@@ -358,6 +441,7 @@ export default function Login() {
                 _hover={{ bg: "blue.500" }}
               >
                 Sign Up
+                {loading && <Spinner size="md" ml="3" />}
               </Button>
               <StyledText fSize="18px" mt="20px">
                 Already have an account?
@@ -381,6 +465,7 @@ export default function Login() {
           isOpen={isOpen}
           onclose={onClose}
           pic={handleProfileImage}
+          UPImage={handleUpLoadImage}
         />
       </Box>
     </>

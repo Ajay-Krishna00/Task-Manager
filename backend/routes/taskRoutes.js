@@ -94,17 +94,9 @@ router.delete("/tasks/:id", async (req, res) => {
   }
 });
 
+// Get User
 router.get("/users", async (req, res) => {
   try {
-    // // Fetch the current session
-    // const { data: session, error: sessionError } = await supabase.auth.getSession();
-
-    // if (sessionError) {
-    //   console.error("Error fetching session:", sessionError.message);
-    //   return res.status(500).json({ error: `Failed to fetch session: ${sessionError.message}` });
-    // }
-    // console.log(session);
-    // const userId = session?.user?.id;
     const userId = req.user.id; // User ID from authMiddleware
 
     if (!userId) {
@@ -134,82 +126,62 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// // Update a Task
-// router.put("/tasks/:id", authMiddleware, async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const userId = req.user.id;
-//     const {
-//       title,
-//       description,
-//       dueDate,
-//       priority,
-//       isCompleted,
-//       completedDate,
-//     } = req.body;
+// Update a Task
+router.put("/tasks/:id", async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      dueDate,
+      priority,
+      isCompleted,
+      completedDate,
+    } = req.body;
 
-//     // First verify the task belongs to the user
-//     const { data: task } = await supabase
-//       .from("tasks")
-//       .select("user_id")
-//       .eq("id", id)
-//       .single();
+    // First verify the task belongs to the user
+    const { data: task } = await supabase
+      .from("tasks")
+      .select("user_id")
+      .eq("id", id)
+      .single();
 
-//     if (!task) {
-//       return res.status(404).json({ error: "Task not found" });
-//     }
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
 
-//     if (task.user_id !== userId) {
-//       return res
-//         .status(403)
-//         .json({ error: "Unauthorized to update this task" });
-//     }
+    if (task.user_id !== userId) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to update this task" });
+    }
 
-//     const { data, error } = await supabase
-//       .from("tasks")
-//       .update({
-//         title,
-//         description,
-//         due_date: dueDate,
-//         priority: priority,
-//         is_completed: isCompleted,
-//         completed_date: completedDate,
-//       })
-//       .eq("id", id)
-//       .select();
+    const { data, error } = await supabase
+      .from("tasks")
+      .update({
+        title,
+        description,
+        dueDate: dueDate,
+        priority: priority,
+        isCompleted: isCompleted,
+        completedDate: completedDate,
+      })
+      .eq("id", id)
+      .select();
 
-//     if (error) throw error;
+    if (error) throw error;
 
-//     res.json({
-//       message: "Task updated successfully",
-//       task: data[0],
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       error: "Failed to update task",
-//       details: error.message,
-//     });
-//   }
-// });
-
-// router.get("/users/:id", authMiddleware, async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { data, error } = await supabase
-//       .from("users")
-//       .select("*")
-//       .eq("id", id);
-
-//     res.json({
-//       message: "User retrieved successfully",
-//       user: data[0],
-//     });
-//   } catch (error) {
-//     res.status(500).json({
-//       error: "Failed to retrieve user",
-//       details: error.message,
-//     });
-//   }
-// });
+    res.json({
+      message: "Task updated successfully",
+      task: data[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to update task",
+      details: error.message,
+    });
+  }
+});
 
 export default router;

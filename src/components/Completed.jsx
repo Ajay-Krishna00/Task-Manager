@@ -17,6 +17,8 @@ import {
   AlertIcon,
   CloseButton,
   useDisclosure,
+  useToast,
+  Button,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import { StyledText } from "./StyledComponenets";
@@ -27,12 +29,23 @@ import { MdOutlineRemoveDone } from "react-icons/md";
 import { useState, useEffect } from "react";
 import EditTaskModal from "./EditTaskModal";
 import { fetchTasks } from "../utils/api";
+import { createTask } from "../utils/api";
+import { updateTask } from "../utils/api";
+import { deleteTask } from "../utils/api";
+import TaskModal from "./AddTaskModal";
+import { IoAddOutline } from "react-icons/io5";
 
 export default function CompletedTasks() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentTask, setCurrentTask] = useState(null);
   const [error, setError] = useState(null);
+  const toast = useToast();
+  const {
+    isOpen: AddIsOpen,
+    onOpen: AddOnOpen,
+    onClose: AddOnClose,
+  } = useDisclosure();
 
   const { colorMode } = useColorMode();
   const {
@@ -42,76 +55,111 @@ export default function CompletedTasks() {
   } = useDisclosure();
 
   const fetchData = async () => {
-    {
-      setLoading(true);
-      try {
-        const res = await fetch("http://localhost:5000/tasks");
-        if (!res.ok) {
-          throw new Error("Failed to fetch data from the server");
-        }
-        const data = await res.json();
-        setTasks(data.filter((task) => task.isCompleted === true));
-      } catch (e) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
+    // ✅
+    try {
+      const { data } = await fetchTasks();
+      if (data) {
+        setTasks(data.tasks.filter((task) => task.isCompleted === true));
+      } else {
+        throw new Error("Data or tasks are undefined in the response");
       }
+    } catch (e) {
+      if (e == "TypeError: data is undefined") {
+        setError("");
+      } else {
+        setError(`Failed to fetch data`);
+      }
+    } finally {
+      setLoading(false);
     }
   };
   const addTask = async (newTask) => {
+    // ✅
     const taskWithId = { ...newTask, id: Date.now() };
     try {
-      const res = await fetch("http://localhost:5000/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(taskWithId),
-      });
-      if (!res.ok) throw new Error("Error adding task");
-      setTasks((prevTasks) => [...prevTasks, taskWithId]); // Update local state
-      fetchData(); // Optionally, fetch data to ensure sync
-    } catch (e) {
-      console.error("Error adding task:", e);
-      setError(e.message);
+      const data = await createTask(taskWithId);
+      if (data.message === "Task created successfully") {
+        toast({
+          title: "Task Added Successfully!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setTasks((prevTasks) => [...prevTasks, taskWithId]); // Update local state
+        fetchData(); //  fetch data to ensure sync
+      } else {
+        toast({
+          title: "An error occurred.",
+          description: data.error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      setError("Error: " + error.message);
     }
   };
 
   const editTask = async (editedTask) => {
+    // ✅
     try {
-      await fetch(`http://localhost:5000/tasks/${editedTask.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editedTask),
-      });
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task.id === editedTask.id ? editedTask : task,
-        ),
-      );
-    } catch (e) {
-      setError(e.message);
+      const data = await updateTask(editedTask);
+      if (data.data.message == "Task updated successfully") {
+        toast({
+          title: "Task Edited Successfully!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task.id === editedTask.id ? editedTask : task,
+          ),
+        );
+        fetchData(); //  fetch data to ensure sync
+      } else {
+        toast({
+          title: "An error occurred.",
+          description: data.error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      setError("Error: " + error.message);
     }
-
-    fetchData();
   };
 
   const handleEdit = (task) => {
     setCurrentTask(task);
     EditOnOpen();
-
-    fetchData();
   };
 
   const handleDelete = async (DTask) => {
+    // ✅
     setTasks(tasks.filter((t) => t.id !== DTask.id));
     try {
-      await fetch(`http://localhost:5000/tasks/${DTask.id}`, {
-        method: "DELETE",
-      });
+      const res = await deleteTask(DTask.id);
+      if (res.message == "Task deleted successfully") {
+        toast({
+          title: "Task Deleted Successfully!",
+          status: "warning",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "An error occurred.",
+          description: res.error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
       setTasks((prevTasks) => prevTasks.filter((t) => t.id !== DTask.id));
+      fetchData();
     } catch (e) {
       setError(e.message);
     }
@@ -120,14 +168,31 @@ export default function CompletedTasks() {
   };
 
   const handleComplete = async (ComTask) => {
-    const updatedTask = { ...ComTask, isCompleted: !ComTask.isCompleted };
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    // Get the month (Note: months are 0-indexed, so add 1)
+    const month = currentDate.getMonth() + 1;
+    const date = currentDate.getDate();
+    const compDate = `${year}-${month}-${date}`;
+    const updatedTask = {
+      ...ComTask,
+      isCompleted: !ComTask.isCompleted,
+      completedDate: !ComTask.isCompleted ? compDate : null,
+    };
     try {
-      const res = await fetch(`http://localhost:5000/tasks/${ComTask.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedTask),
-      });
-      if (!res.ok) throw new Error("Error completing task");
+      const data = await updateTask(updatedTask);
+      if (
+        data.data.message == "Task updated successfully" &&
+        updatedTask.isCompleted
+      ) {
+        toast({
+          title: "Task Completed!",
+          description: "You Did It!👍",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task.id === ComTask.id
@@ -135,21 +200,28 @@ export default function CompletedTasks() {
             : task,
         ),
       );
+
+      fetchData(); //  fetch data to ensure sync
     } catch (e) {
       setError(e.message);
     }
   };
+
   useEffect(() => {
+    // ✅
     async function fetchData() {
       try {
-        const { res } = await fetchTasks();
-        const data = res.tasks;
-        setTasks(data.filter((task) => task.isCompleted === true));
+        const { data } = await fetchTasks();
+        if (data) {
+          setTasks(data.tasks.filter((task) => task.isCompleted === true));
+        } else {
+          throw new Error("Data or tasks are undefined in the response");
+        }
       } catch (e) {
-        if (e == "TypeError: res is undefined") {
+        if (e == "TypeError: data is undefined") {
           setError("");
         } else {
-          setError(e.message);
+          setError(`Failed to fetch data `);
         }
       } finally {
         setLoading(false);
@@ -199,6 +271,18 @@ export default function CompletedTasks() {
             }}
           />
         </Alert>
+      )}
+      {tasks.length === 0 && !loading && (
+        <Flex
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          h={"60vh"}
+        >
+          <StyledText textAlign={"center"} fontSize={"20px"} mt={"20px"}>
+            No tasks Completed
+          </StyledText>
+        </Flex>
       )}
       <Grid
         templateColumns={{
@@ -292,6 +376,26 @@ export default function CompletedTasks() {
           </Card>
         ))}
       </Grid>
+
+      <Tooltip label="Add Task" aria-label="A tooltip" placement="bottom">
+        <Button
+          borderRadius={"50%"}
+          h={"60px"}
+          w={"60px"}
+          position={"fixed"}
+          bottom={"60px"}
+          right={"60px"}
+          color={"white"}
+          bg={"blackAlpha.900"}
+          p={0}
+          _hover={{ bg: "blue.500" }}
+          onClick={AddOnOpen}
+        >
+          <IoAddOutline fontSize={"45px"} />
+        </Button>
+      </Tooltip>
+      <TaskModal isOpen={AddIsOpen} onClose={AddOnClose} addTask={addTask} />
+
       <EditTaskModal
         isOpen={EditIsOpen}
         onClose={EditOnClose}

@@ -4,9 +4,7 @@ import {
   Image,
   Button,
   Tooltip,
-  Alert,
-  AlertIcon,
-  CloseButton,
+  useToast,
   Avatar,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
@@ -30,6 +28,7 @@ function Header({ onToggle }) {
   const navigate = useNavigate();
   const token = getAuthToken();
   const [error, setError] = useState(null);
+  const toast = useToast();
 
   const handleLogout = async () => {
     const success = await logout();
@@ -46,16 +45,20 @@ function Header({ onToggle }) {
         const { userInfos, error } = await fetchUser();
         setData(userInfos.user);
         if (error) {
-          if (error == "Token expired, please log in again") {
-            const success = await logout();
-            removeAuthToken();
-            setError("Session timed out. Please Log In again");
+          if (error.error == "Token expired, please log in again") {
+            toast({
+              title: "Session Expired",
+              description: "Please login again",
+              status: "error",
+              duration: 6000,
+              isClosable: true,
+              position: "top",
+            });
             if (success) {
               console.log("Logged out successfully");
             }
             navigate("/");
           }
-          console.log(`Failed to fetch user ${error}`);
         }
       } catch (error) {
         console.log(`Failed to fetch tasks`);
@@ -118,7 +121,10 @@ function Header({ onToggle }) {
             {colorMode === "light" ? <FiSun fontSize={"20px"} /> : <FaMoon />}
           </IconButton>
           <Avatar
-            src="https://bit.ly/naruto-sage"
+            src={
+              data.profile_Img ||
+              "https://cdn-icons-png.flaticon.com/512/3276/3276535.png"
+            }
             boxSize="45px"
             borderRadius="full"
             fit="cover"
@@ -144,21 +150,6 @@ function Header({ onToggle }) {
           </Button>
         </Box>
       </Box>
-      {error && (
-        <Alert status="error" mb={4}>
-          <AlertIcon />
-          {error}
-          <CloseButton
-            alignSelf="flex-start"
-            position="relative"
-            right={-1}
-            top={-1}
-            onClick={() => {
-              setError("");
-            }}
-          />
-        </Alert>
-      )}
     </Box>
   );
 }

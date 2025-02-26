@@ -23,8 +23,6 @@ export default function EditTaskModal({
   editTask,
   currentTask,
 }) {
-  const toast = useToast();
-
   const [task, setTask] = useState({
     id: currentTask?.id || null,
     title: currentTask ? currentTask.title : "",
@@ -48,38 +46,8 @@ export default function EditTaskModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!task.id) return;
     editTask(task);
     onClose();
-    try {
-      const res = await fetch("http://localhost:5000/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast({
-          title: "Task Edited Successfully!",
-          status: "success",
-          duration: 4000,
-          isClosable: true,
-        });
-        addTask(data[0]); // [0] is used to get the first element of the array which is the newly added task
-      } else {
-        toast({
-          title: "An error occurred.",
-          description: data.error,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      alert("Error: " + error.message);
-    }
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -143,7 +111,7 @@ export default function EditTaskModal({
 
               <Button
                 type="submit"
-                bg={"blue.400"}
+                bg={"black"}
                 color={"white"}
                 _hover={{ bg: "blue.300" }}
               >
