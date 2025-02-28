@@ -165,8 +165,6 @@ function Header({ onToggle }) {
     </Box>
   );
 }
-Header.propTypes = {
-  onToggle: PropTypes.func.isRequired,
-};
+
 
 export default Header;

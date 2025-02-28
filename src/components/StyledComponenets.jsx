@@ -29,11 +29,6 @@ const StyledText = forwardRef(
 );
 StyledText.displayName = "StyledText";
 
-StyledText.propTypes = {
-  fSize: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  lineHeight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  noOfLines: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  props: PropTypes.object,
-};
+
 
 export { StyledText };

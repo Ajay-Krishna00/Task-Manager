@@ -124,9 +124,3 @@ export default function EditTaskModal({
     </Modal>
   );
 }
-EditTaskModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  editTask: PropTypes.func.isRequired,
-  currentTask: PropTypes.object,
-};

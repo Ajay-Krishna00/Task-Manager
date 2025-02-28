@@ -116,7 +116,3 @@ export default function TaskModal({ isOpen, onClose, addTask }) {
     </Modal>
   );
 }
-TaskModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
