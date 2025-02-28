@@ -8,7 +8,7 @@ import {
   Avatar,
   Text,
 } from "@chakra-ui/react";
-import PropTypes from "prop-types";
+
 import { useColorMode } from "@chakra-ui/react";
 import { TiThMenu } from "react-icons/ti";
 import { FiSun } from "react-icons/fi";

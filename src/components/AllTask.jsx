@@ -30,7 +30,7 @@ import { MdOutlineRemoveDone } from "react-icons/md";
 import TaskModal from "./AddTaskModal";
 import EditTaskModal from "./EditTaskModal";
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+
 import { fetchTasks } from "../utils/api";
 import { createTask } from "../utils/api";
 import { updateTask } from "../utils/api";

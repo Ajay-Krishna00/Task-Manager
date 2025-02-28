@@ -15,7 +15,7 @@ import {
   Select,
   Alert,
 } from "@chakra-ui/react";
-import PropTypes from "prop-types";
+
 import { useEffect, useState } from "react";
 
 export default function TaskModal({ isOpen, onClose, addTask }) {

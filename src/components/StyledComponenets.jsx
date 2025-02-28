@@ -1,7 +1,6 @@
 import { Text } from "@chakra-ui/react";
 import { forwardRef } from "react";
 import { useColorMode } from "@chakra-ui/react";
-import PropTypes from "prop-types";
 
 const StyledText = forwardRef(
   ({ children, fSize, lineHeight, noOfLines, Color, ...props }, ref) => {

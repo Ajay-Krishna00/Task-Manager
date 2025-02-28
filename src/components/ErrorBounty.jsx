@@ -1,6 +1,5 @@
 // ErrorBoundary.jsx
 import { Component } from "react";
-import PropTypes from "prop-types";
 
 class ErrorBoundary extends Component {
   constructor(props) {

@@ -9,7 +9,6 @@ import { PiSealWarning } from "react-icons/pi";
 import { HiOutlineWallet } from "react-icons/hi2";
 import { StyledText } from "./StyledComponenets";
 import { useColorMode } from "@chakra-ui/react";
-import PropTypes from "prop-types";
 import Calendar from "./Calender";
 import { NavLink } from "react-router-dom";
 
@@ -201,9 +200,5 @@ function Sidebar({ isOpen }) {
     </Box>
   );
 }
-
-Sidebar.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-};
 
 export default Sidebar;

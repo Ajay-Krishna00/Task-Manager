@@ -20,7 +20,7 @@ import {
   useToast,
   Button,
 } from "@chakra-ui/react";
-import PropTypes from "prop-types";
+
 import { StyledText } from "./StyledComponenets";
 import { CiEdit } from "react-icons/ci";
 import { IoCheckmarkDone } from "react-icons/io5";

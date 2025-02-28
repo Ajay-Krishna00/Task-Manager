@@ -14,7 +14,7 @@ import {
   FormLabel,
   Select,
 } from "@chakra-ui/react";
-import PropTypes from "prop-types";
+
 import { useEffect, useState } from "react";
 
 export default function EditTaskModal({
