@@ -1,7 +1,7 @@
 // src/utils/api.js
 import axios from "axios";
 
-const API_URL = process.env.API_BASE_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 // Sign up a new user
 export const signUp = async (email, password, name, profile_Img) => {
