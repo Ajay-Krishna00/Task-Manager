@@ -67,7 +67,9 @@ export default function Login() {
         return;
       }
       setAuthToken(token);
-      navigate("/Dashboard");
+      setTimeout(() => {
+            navigate("/Dashboard");
+        }, 500);
     } catch (error) {
       setError("Invalid email or password");
     } finally {
