@@ -32,29 +32,42 @@ The **Task Manager** is a full-stack web application that allows users to effici
 
 ```
 task-manager/
-│── backend/               # Backend code (Node.js + Express)
-│   ├── middleware/        # Middleware functions (Authentication)
-│   ├── routes/            # API routes (Auth, Tasks, Image Upload)
-│   ├── utils/             # Utility functions (Supabase Client)
-│   ├── .env               # Environment variables
-│   ├── package.json       # Backend dependencies
-│   ├── server.js          # Main server file
-│
-│── src/                   # Frontend code (React.js)
-│   ├── components/        # React Components
-│   │   ├── Dashboard.jsx  # Main dashboard UI
-│   │   ├── Login.jsx      # Login page
-│   │   ├── TaskManager.jsx# Task management UI
-│   ├── utils/             # Helper functions (API calls, Auth)
-│   ├── App.jsx            # Main App file
-│   ├── main.jsx           # Entry point
-│   ├── style/             # Styling files
-│
-│── dist/                  # Build files (for deployment)
-│── public/                # Static assets
-│── package.json           # Frontend dependencies
-│── vite.config.js         # Vite configuration
-│── README.md              # Project documentation
+├── backend/
+│   ├── middleware/
+│   │   └── authMiddleware.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── taskRoutes.js
+│   │   └── UploadImage.js
+│   ├── utils/
+│   │   └── supabaseClient.js
+│   └── server.js
+├── src/
+│   ├── components/
+│   │   ├── accountpicmodal.jsx
+│   │   ├── AddTaskModal.jsx
+│   │   ├── AllTask.jsx
+│   │   ├── Calendar.jsx
+│   │   ├── Completed.jsx
+│   │   ├── Dashboard.jsx
+│   │   ├── Due.jsx
+│   │   ├── EditTaskModal.jsx
+│   │   ├── header.jsx
+│   │   ├── Login.jsx
+│   │   ├── protectedRoute.jsx
+│   │   ├── sidebar.jsx
+│   │   └── Today.jsx
+│   ├── style/
+│   │   ├── style.css
+│   │   └── style.js
+│   └── utils/
+│       ├── api.js
+│       └── auth.js
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── package.json
+└── vite.config.js
 ```
 
 ## Installation & Setup
@@ -62,7 +75,7 @@ task-manager/
 ### **1. Clone the Repository**
 
 ```sh
-git clone https://github.com/yourusername/task-manager.git
+git clone https://github.com/Ajay-Krishna00/Task-Manager
 cd task-manager
 ```
 
@@ -110,8 +123,8 @@ npm run dev  # Starts Vite server
 
 ## Deployment
 
-To deploy the backend, use **Render, Railway, or Vercel (serverless functions)**.
-To deploy the frontend, use **Vercel or Netlify**.
+To deploy the backend, use **Render, Railway, or Vercel (serverless functions)**.(I have used Render)
+To deploy the frontend, use **Vercel or Netlify**. (I have used Vercel)
 
 ## Future Enhancements
 
