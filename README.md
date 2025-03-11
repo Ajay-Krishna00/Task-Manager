@@ -42,6 +42,9 @@ task-manager/
 │   ├── utils/
 │   │   └── supabaseClient.js
 │   └── server.js
+├── dist/
+├── node_modules/
+├── public/
 ├── src/
 │   ├── components/
 │   │   ├── accountpicmodal.jsx
@@ -60,9 +63,12 @@ task-manager/
 │   ├── style/
 │   │   ├── style.css
 │   │   └── style.js
-│   └── utils/
-│       ├── api.js
-│       └── auth.js
+│   ├── utils/
+│   │   ├── api.js
+│   │   └── auth.js
+│   ├── App.jsx
+│   ├── TaskManager.jsx
+│   └── main.jsx
 ├── .gitignore
 ├── eslint.config.js
 ├── index.html
