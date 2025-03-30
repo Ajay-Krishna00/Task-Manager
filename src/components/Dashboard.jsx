@@ -248,7 +248,7 @@ const TaskDashboard = () => {
                     >
                       <Stack display={"flex"} direction={"row"} align="center">
                         <StyledText
-                          fSize={{ base: "14px", md: "18px" }}
+                          fSize={{ base: "14px", md: "17px" }}
                           fontWeight="medium"
                         >
                           {task.title}
@@ -267,13 +267,13 @@ const TaskDashboard = () => {
                                       ? "green"
                                       : "gray"
                           }
-                          fontSize={{ base: "10px", md: "14px" }}
+                          fontSize={{ base: "10px", md: "13px" }}
                         >
                           {task.priority}
                         </Badge>
                       </Stack>
                       <StyledText
-                        fSize={{ base: "14px", md: "18px" }}
+                        fSize={{ base: "14px", md: "17px" }}
                         color="gray.500"
                       >
                         {task.dueDate}

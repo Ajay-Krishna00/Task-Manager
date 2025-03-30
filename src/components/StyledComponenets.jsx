@@ -14,7 +14,7 @@ const StyledText = forwardRef(
         flexDirection={"row"}
         alignItems={"center"}
         lineHeight={lineHeight || "20px"}
-        color={colorMode === "light" ? "#04050B" || Color : "white"}
+        color={colorMode === "light" ? Color || "#04050B" : Color || "white"}
         fontSize={fSize || "16px"}
         letterSpacing="10%"
         textAlign="left"
@@ -28,7 +28,5 @@ const StyledText = forwardRef(
   },
 );
 StyledText.displayName = "StyledText";
-
-
 
 export { StyledText };

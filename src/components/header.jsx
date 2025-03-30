@@ -58,7 +58,6 @@ function Header({ onToggle }) {
             if (success) {
               console.log("Logged out successfully");
             }
-            navigate("/");
           }
         }
       } catch (error) {
@@ -165,6 +164,5 @@ function Header({ onToggle }) {
     </Box>
   );
 }
-
 
 export default Header;

@@ -20,6 +20,7 @@ import {
   Spinner,
   InputRightElement,
   IconButton,
+  useColorMode,
 } from "@chakra-ui/react";
 import { StyledText } from "./StyledComponenets";
 import { useState } from "react";
@@ -29,12 +30,13 @@ import { MdPassword } from "react-icons/md";
 import AccountPicModal from "./accountpicmodal";
 import { useNavigate } from "react-router-dom";
 import { login } from "../utils/api";
-import { setAuthToken } from "../utils/auth";
+import { isAuthenticated, setAuthToken } from "../utils/auth";
 import { signUp } from "../utils/api";
+import { getAuthToken } from "../utils/auth";
 import { FaRegEye } from "react-icons/fa6";
 import { FaRegEyeSlash } from "react-icons/fa6";
 
-export default function Login() {
+export default function Login({ setIsLoggedIn }) {
   const [log, setLog] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
@@ -49,6 +51,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const [show, setShow] = useState(false);
+  const { colorMode } = useColorMode();
 
   const handleClick = () => setShow(!show);
   const handleLogin = async (e) => {
@@ -62,16 +65,22 @@ export default function Login() {
             "Email not confirmed. Please check your inbox for a confirmation email.",
           );
         } else {
-          setError("Invalid email or password");
+          setError("Invalid Email or Password");
         }
-        return;
       }
       setAuthToken(token);
-      setTimeout(() => {
-            navigate("/Dashboard");
-        }, 500);
+      setIsLoggedIn(isAuthenticated());
+      navigate("/Dashboard");
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+        position: "top",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     } catch (error) {
-      setError("Invalid email or password");
+      setError("Invalid email or password", error);
     } finally {
       setLoading(false);
     }
@@ -312,7 +321,7 @@ export default function Login() {
                       h="1.75rem"
                       size="sm"
                       onClick={handleClick}
-                      bg={"white"}
+                      bg={colorMode === "light" ? "white" : "#04050B"}
                     >
                       {show ? <FaRegEye /> : <FaRegEyeSlash />}
                     </IconButton>
@@ -386,8 +395,8 @@ export default function Login() {
               <Button
                 mt="20px"
                 variant={"outline"}
-                color={"Black"}
-                bg={"white"}
+                color={colorMode === "light" ? "#04050B" : "white"}
+                bg={colorMode === "light" ? "white" : "#04050B"}
                 fontSize={"18px"}
                 p={"4px"}
                 _hover={{ bg: "gray.50" }}
@@ -431,7 +440,7 @@ export default function Login() {
                       h="1.75rem"
                       size="sm"
                       onClick={handleClick}
-                      bg={"white"}
+                      bg={colorMode === "light" ? "white" : "#04050B"}
                     >
                       {show ? <FaRegEye /> : <FaRegEyeSlash />}
                     </IconButton>

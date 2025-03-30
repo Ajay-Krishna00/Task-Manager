@@ -7,7 +7,7 @@ export const setAuthToken = (token) => {
 
 // Get the token from localStorage
 export const getAuthToken = () => {
-  return localStorage.getItem("token");
+  return localStorage.getItem("token") || null;
 };
 
 // Remove the token from localStorage (logout)
