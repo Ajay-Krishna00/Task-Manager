@@ -1,26 +1,42 @@
 // src/utils/api.js
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_URL =  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 // Sign up a new user
 export const signUp = async (email, password, name, profile_Img) => {
-  const response = await axios.post(`${API_URL}/auth/signup`, {
-    email,
-    password,
-    name,
-    profile_Img,
-  });
-  return response.data;
+  try {
+    const response = await axios.post(`${API_URL}/auth/signup`, {
+      email,
+      password,
+      name,
+      profile_Img,
+    });
+    return response.data;
+  }
+  catch (error){
+    if (error.response) {
+      return {error: error.response.data.error || "Signup failed"};
+    }
+  }
 };
 
 // Log in an existing user
 export const login = async (email, password) => {
-  const response = await axios.post(`${API_URL}/auth/login`, {
-    email,
-    password,
-  });
-  return response.data;
+  try {
+    const response = await axios.post(`${API_URL}/auth/login`, {
+      email,
+      password,
+    });
+    return response.data; // If successful, return the token and user
+  } catch (error) {
+    if (error.response) {
+      // The backend sent an error response (e.g., 400, 401, 500)
+      return { error: error.response.data.error || "Login failed" };
+    }
+     // Network error or other issues
+    return { error: "Network error or other issues" };
+  }
 };
 
 // Log out the current user

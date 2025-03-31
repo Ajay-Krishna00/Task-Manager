@@ -57,16 +57,20 @@ export default function Login({ setIsLoggedIn }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
+    setSuccess("");
     try {
-      const { token, user } = await login(email, password);
+      const { token, user,error } = await login(email, password);
       if (error) {
-        if (error.message.includes("Email not confirmed")) {
+        if (error.includes("Email not confirmed")) {
           setError(
             "Email not confirmed. Please check your inbox for a confirmation email.",
           );
         } else {
           setError("Invalid Email or Password");
         }
+        setLoading(false);
+        return;
       }
       setAuthToken(token);
       setIsLoggedIn(isAuthenticated());
@@ -80,7 +84,7 @@ export default function Login({ setIsLoggedIn }) {
         isClosable: true,
       });
     } catch (error) {
-      setError("Invalid email or password", error);
+      setError("Something went wrong. Please try again later");
     } finally {
       setLoading(false);
     }
@@ -93,6 +97,8 @@ export default function Login({ setIsLoggedIn }) {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
+    setSuccess("");
     if (password !== confirmPassword) {
       toast({
         title: "Password mismatch",
@@ -101,6 +107,7 @@ export default function Login({ setIsLoggedIn }) {
         duration: 9000,
         isClosable: true,
       });
+      return;
     }
     try {
       // // Upload the image
@@ -142,13 +149,26 @@ export default function Login({ setIsLoggedIn }) {
       // Sign up the user
       const res = await signUp(email, password, name, profile_Img);
       if (res.error) {
-        toast({
-          title: "Sign up failed",
-          description: res.error,
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
+        console.error("Error signing up: ", res.error);
+        if (res.error?.includes("violates foreign key constraint")) {
+          toast({
+            title: "Sign up failed",
+            description: "Email already exists",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+        else {
+          toast({
+            title: "Sign up failed",
+            description: res.error,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+        return;
       }
       toast({
         title: "Sign up successful",
