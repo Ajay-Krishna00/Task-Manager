@@ -6,6 +6,14 @@ const supabase= createClient(
 );
 
 export default async function handler(req, res) {
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    return res.status(204).end();
+  }
   const data = await supabase.from("tasks").select("title").limit(1);
-  res.status(200).json({status:`pong ${data.data[0].title}`});
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.status(200).json({ status: `ponged: ${data.data[0].title}` });
+  console.log("Pinged:", data.data[0].title);
 }
